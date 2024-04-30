@@ -34,7 +34,37 @@ import traceback
 if platform.system() == "Windows":
     import ctypes
     ctypes.windll.ole32.CoInitialize(None)
+else:
+    # import clr_loader
+    import pythonnet
+    mono_base = '/opt/mono5-sil'
+    # mono_base = '/usr'
+    # mono_base = '/var/lib/flatpak/app/org.sil.FieldWorks/current/active/files'
+    # mono_base = '/app/lib'
+    mono_path = [
+        f"{mono_base}/lib/mono/gac",
+        f"{mono_base}/lib/mono/4.5",
+        f"{mono_base}/lib",
+    ]
+    # os.environ['LD_RUN_PATH'] = os.getenv('LD_LIBRARY_PATH', '')
+    # os.environ['MONO_ENV_OPTIONS'] = "--optimize=-gshared"
+    # os.environ['MONO_ENV_OPTIONS'] = "--interp"
+    # os.environ['MONO_GAC_PREFIX'] = "/usr/lib"
+    # os.environ['MONO_PATH'] = ':'.join(mono_path)
+    # https://www.mono-project.com/docs/advanced/runtime/logging-runtime-events
+    os.environ['MONO_LOG_LEVEL'] = 'debug'
+    # os.environ['MONO_LOG_MASK'] = 'asm,cfg,dll,io-layer,type'
 
+    pythonnet.load(
+        'mono',
+        assembly_dir=mono_base,
+        # debug=True,
+        # libmono="/usr/lib/libmono-2.0.so.1",
+        # set_signal_chaining=True,
+    )
+    # Alternative runtime loading.
+    # rt = clr_loader.get_mono(assembly_dir=mono_sil)
+    # pythonnet.set_runtime(rt)
 
 import clr
 import System
