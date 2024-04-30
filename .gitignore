@@ -65,6 +65,7 @@ coverage.xml
 .env
 .venv
 env/
+fwenv/
 venv/
 ENV/
 env.bak/
